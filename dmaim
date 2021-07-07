@@ -1,0 +1,29 @@
+#!/bin/bash
+
+IMG_PATH=$HOME/Pictures/screenshots/
+# EDIT=pinta
+FORMAT=.png				# maim sup png/jpg
+
+prog="1.fullscreen
+2.section"
+# 3.edit_fullscreen"
+
+cmd=$(dmenu -l 2 -nf '#f0f0f0' -nb '#353535' -sf '#f0f0f0' -sb '#4184F3' -p 'Screenshot Type:' <<< "$prog")
+
+function input_name {
+	name=$(dmenu -nf '#f0f0f0' -nb '#353535' -sf '#f0f0f0' -sb '#4184F3' -p 'Name:')
+	if [[ $name == '' ]]; then
+		exit
+	fi
+}
+	
+case ${cmd%% *} in
+	1.fullscreen) 
+		input_name
+		maim $IMG_PATH$name$FORMAT && notify-send -u low 'Maim' 'Fullscreen SS taken!' ;;
+	2.section) 
+		input_name
+		maim -s $IMG_PATH$name$FORMAT && notify-send -u low 'Maim' 'Section SS taken!' ;;
+	# 3.edit_fullscreen) scrot '%Y-%m-%d-@%H-%M-%S-scrot.png' -e "$EDIT \$f" && notify-send -u 'Scrot' 'Screenshot edited and saved' ;;
+*) exec "'${cmd}'" ;;
+esac
